@@ -24,11 +24,18 @@ class RecognitionModel:
         loc, conf = self.ssd(Variable(img_tensor[None,:,:,:], volatile=True))
         data_encoder = DataEncoder()
         boxes, _, _ = data_encoder.decode(loc.data.squeeze(0), F.softmax(conf.squeeze(0)).data)
-        boxes_list = []
-        for box in boxes:
+        if boxes is None:
+            return None
+        boxes_dict = {}
+        coord_name_list = ["x1", "y1", "x2", "y2"]
+        for idx, box in enumerate(boxes):
             box[::2] *= img.width
             box[1::2] *= img.height
-            box_np= box.numpy()
+            box_np = box.numpy()
             box_np = box_np.astype(np.int64)
-            boxes_list.append(box_np.tolist())
-        return boxes_list
+            box_list = box_np.tolist()
+            box_dict = {}
+            for coord_name, coord in zip(coord_name_list, box_list):
+                box_dict[coord_name] = coord
+            boxes_dict[str(idx)] = box_dict
+        return boxes_dict

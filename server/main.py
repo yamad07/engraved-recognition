@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Resource, Api, reqparse
 import werkzeug
 import numpy as np
@@ -15,7 +15,7 @@ api = Api(app)
 
 
 class Recognition(Resource):
-    success_message = json.dumps({'status': 0, 'message': 'success'})
+    success_message_dict = {'status': 200, 'message': 'success'}
     model = RecognitionModel()
 
     def post(self):
@@ -25,7 +25,8 @@ class Recognition(Resource):
         img_file_storage = args['img']
         img = self.file_storage_to_np(img_file_storage)
         coord = self.model.run(img)
-        return coord
+        self.success_message_dict["coord"] = coord
+        return jsonify(self.success_message_dict)
 
     def file_storage_to_np(self, img_file_storage):
         in_memory_file = io.BytesIO()

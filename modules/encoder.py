@@ -78,7 +78,12 @@ class DataEncoder:
         boxes = torch.cat([cxcy-wh/2, cxcy+wh/2], 1)  # [8732,4]
 
         max_conf, labels = conf.max(1)  # [8732,1]
-        ids = labels.nonzero().squeeze(1)  # [#boxes,]
-        print(max_conf)
-        keep = self.nms(boxes[ids], max_conf[ids])
-        return boxes[ids][keep], labels[ids][keep], max_conf[ids][keep]
+        current_labels = labels.nonzero()
+        print(current_labels)
+        print(current_labels.dim())
+        if current_labels.dim() == 0:
+            return None, None, None
+        else:
+            ids = labels.nonzero().squeeze(1)  # [#boxes,]
+            keep = self.nms(boxes[ids], max_conf[ids])
+            return boxes[ids][keep], labels[ids][keep], max_conf[ids][keep]
