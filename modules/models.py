@@ -11,7 +11,7 @@ class RecognitionModel:
 
     def __init__(self):
         self.ssd = SSD(False)
-        self.ssd.load_state_dict(torch.load('../weights/weight_299.pth', map_location=lambda storage, loc: storage))
+        self.ssd.load_state_dict(torch.load('../weights/engraved.pth', map_location=lambda storage, loc: storage))
         self.ssd.eval()
 
     def run(self, img):

@@ -20,17 +20,14 @@ for file_path in files:
     img = Image.open(file_path)
     draw = ImageDraw.Draw(img)
     boxes = model.run(img)
-    try:
-        x1 = boxes['0']['x1']
-        x2 = boxes['0']['x2']
-        y1 = boxes['0']['y1']
-        y2 = boxes['0']['y2']
-    
-        box = [x1, y1, x2, y2]
-        print(box)
+    print(file_path)
+    x1 = boxes['0']['x1']
+    x2 = boxes['0']['x2']
+    y1 = boxes['0']['y1']
+    y2 = boxes['0']['y2']
 
-        draw.rectangle(list(box), outline='red')
-    except:
-        pass
+    box = [x1, y1, x2, y2]
+
+    draw.rectangle(list(box), outline='red')
     file_name = file_path.split('/')[-1]
     img.save(os.path.join('../results/', file_name))
