@@ -15,6 +15,7 @@ class RecognitionModel:
         self.ssd.eval()
 
     def run(self, img):
+        w, h = img.size
         img_resized = img.resize((300, 300))
         transform = transforms.Compose([
                                         transforms.Resize((300, 300)),
@@ -27,6 +28,8 @@ class RecognitionModel:
         if boxes is None:
             return None
         boxes_dict = {}
+        boxes_dict['width'] = w
+        boxes_dict['height'] = h 
         coord_name_list = ["x1", "y1", "x2", "y2"]
         for idx, box in enumerate(boxes):
             box[::2] *= img.width
